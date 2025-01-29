@@ -277,7 +277,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 					}
 
 					// Rate limiting: wait for 1 second before making the next API request
-					await new Promise((resolve) => setTimeout(resolve, 250));
+					await new Promise((resolve) => setTimeout(resolve, 500));
 				}
 			} else if (sourceId === "weebcentral") {
 				// Fetch chapters
@@ -450,7 +450,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 						}
 
 						// Split pages into chunks to limit URL length
-						const maxImagesPerRequest = 10; // Adjust this value as needed
+						const maxImagesPerRequest = 20; // Adjust this value as needed
 						const pagesChunks = chunkArray(
 							pages,
 							maxImagesPerRequest
@@ -502,7 +502,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 
 							// Rate limiting: wait for 1 second before processing the next chunk
 							await new Promise((resolve) =>
-								setTimeout(resolve, 100)
+								setTimeout(resolve, 500)
 							);
 						}
 					} else if (sourceId === "manganato") {
@@ -539,7 +539,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 						}
 
 						// Split pages into chunks to limit URL length
-						const maxImagesPerRequest = 10; // Adjust this value as needed
+						const maxImagesPerRequest = 20; // Adjust this value as needed
 						const pagesChunks = chunkArray(
 							pages,
 							maxImagesPerRequest
@@ -594,7 +594,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 
 							// Rate limiting: wait for 1 second before processing the next chunk
 							await new Promise((resolve) =>
-								setTimeout(resolve, 100)
+								setTimeout(resolve, 500)
 							);
 						}
 					} else if (sourceId === "batoto") {
@@ -675,7 +675,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 						});
 
 						// Split pages into chunks to limit URL length
-						const maxImagesPerRequest = 10; // Adjust this value as needed
+						const maxImagesPerRequest = 20; // Adjust this value as needed
 						const pagesChunks = chunkArray(
 							pages,
 							maxImagesPerRequest
@@ -730,7 +730,7 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 
 							// Rate limiting: wait for 1 second before processing the next chunk
 							await new Promise((resolve) =>
-								setTimeout(resolve, 100)
+								setTimeout(resolve, 500)
 							);
 						}
 					}
@@ -739,13 +739,15 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 						`Error processing chapter ${chapterId} for mangaId ${entry.mangaId} from sourceId ${sourceId}:`,
 						error.message
 					);
+
+					cache[sourceId][entry.mangaId][chapterId] = false;
 				}
 
 				// Save the cache to the file
 				saveCache(cacheFilePath, cache);
 
 				// Rate limiting: wait for 1 second before processing the next chapter
-				await new Promise((resolve) => setTimeout(resolve, 250));
+				await new Promise((resolve) => setTimeout(resolve, 1000));
 			}
 		} catch (error) {
 			console.error(
@@ -759,6 +761,6 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 		saveCache(cacheFilePath, cache);
 
 		// Rate limiting: wait for 1 second before processing the next entry
-		await new Promise((resolve) => setTimeout(resolve, 250));
+		await new Promise((resolve) => setTimeout(resolve, 500));
 	}
 }
