@@ -188,7 +188,7 @@ function saveCache(cacheFilePath, cache) {
 		// Assuming sourceMangaJson is an object with entries as properties
 
 		// Step 5: Process each entry with rate limiting and caching
-		await processEntries(sourceMangaJson, browser, cache);
+		await processEntries(sourceMangaJson, browser, cache, cacheFilePath);
 	} catch (err) {
 		console.error("Error:", err);
 	} finally {
@@ -206,7 +206,7 @@ function saveCache(cacheFilePath, cache) {
  * @param {Object} browser - The Puppeteer browser instance.
  * @param {Object} cache - The cache object to use and update.
  */
-async function processEntries(entriesObj, browser, cache) {
+async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 	const entryKeys = Object.keys(entriesObj);
 	for (let i = 0; i < entryKeys.length; i++) {
 		const key = entryKeys[i];
@@ -249,7 +249,7 @@ async function processEntries(entriesObj, browser, cache) {
 						// Removed Authorization header from this request
 					};
 
-					const response = await axios.get(url, { headers });
+					const response = await axios.get(url, { headers: headers });
 					const data = response.data;
 
 					// Check if results are returned
@@ -288,7 +288,7 @@ async function processEntries(entriesObj, browser, cache) {
 					Referer: baseUrl,
 				};
 
-				const response = await axios.get(url, { headers });
+				const response = await axios.get(url, { headers: headers });
 				const $ = cheerio.load(response.data);
 
 				const arrChapters = $("a.flex.items-center").toArray();
@@ -312,7 +312,9 @@ async function processEntries(entriesObj, browser, cache) {
 					Referer: baseUrl,
 				};
 
-				const mangaResponse = await axios.get(mangaUrl, { headers });
+				const mangaResponse = await axios.get(mangaUrl, {
+					headers: headers,
+				});
 				const $ = cheerio.load(mangaResponse.data);
 
 				const chapterListSelector =
@@ -416,12 +418,18 @@ async function processEntries(entriesObj, browser, cache) {
 							`Processing chapter ${chapterId} for mangaId ${entry.mangaId} from sourceId ${sourceId}`
 						);
 
+						const baseUrl = "https://weebcentral.com";
+
+						let headers = {
+							Referer: baseUrl,
+						};
+
 						// Construct the new URL: baseUrl + "/chapters/" + chapterId + "/images?reading_style=long_strip"
 						let chapterUrl = `${baseUrl}/chapters/${chapterId}/images?reading_style=long_strip`;
 
 						// Perform axios.get on this combined URL, including referer in headers
 						const chapterResponse = await axios.get(chapterUrl, {
-							headers,
+							headers: headers,
 						});
 
 						// Load response.data into cheerio
@@ -503,9 +511,14 @@ async function processEntries(entriesObj, browser, cache) {
 							`Processing Manganato chapter ${chapterId}`
 						);
 
+						const baseUrl = "https://manganato.com";
+						let headers = {
+							Referer: baseUrl,
+						};
+
 						// axios.get the chapterId (which is a URL)
 						const chapterResponse = await axios.get(chapterId, {
-							headers,
+							headers: headers,
 						});
 						const $$ = cheerio.load(chapterResponse.data);
 
@@ -728,6 +741,9 @@ async function processEntries(entriesObj, browser, cache) {
 					);
 				}
 
+				// Save the cache to the file
+				saveCache(cacheFilePath, cache);
+
 				// Rate limiting: wait for 1 second before processing the next chapter
 				await new Promise((resolve) => setTimeout(resolve, 250));
 			}
@@ -738,6 +754,9 @@ async function processEntries(entriesObj, browser, cache) {
 			);
 			continue; // Skip to the next entry if there's an error
 		}
+
+		// Save the cache to the file
+		saveCache(cacheFilePath, cache);
 
 		// Rate limiting: wait for 1 second before processing the next entry
 		await new Promise((resolve) => setTimeout(resolve, 250));
