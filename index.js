@@ -371,7 +371,11 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 				// Check if chapterId exists in the cache
 				if (cache[sourceId][entry.mangaId][chapterId]) {
 					console.log(
-						`Skipping already processed chapter ${chapterId} for mangaId ${entry.mangaId} from sourceId ${sourceId}`
+						`(${i + 1}/${
+							entryKeys.length
+						}) Skipping already processed chapter ${chapterId} for mangaId ${
+							entry.mangaId
+						} from sourceId ${sourceId}`
 					);
 					continue; // Skip processing this chapter
 				}
@@ -380,7 +384,11 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 					if (sourceId === "mangadex") {
 						// Process the chapter as before
 						console.log(
-							`Processing chapter ${chapterId} for mangaId ${entry.mangaId} from sourceId ${sourceId}`
+							`(${i + 1}/${
+								entryKeys.length
+							}) Processing chapter ${chapterId} for mangaId ${
+								entry.mangaId
+							} from sourceId ${sourceId}`
 						);
 
 						// Combine process.env.SITE with "/manga?chapterId=" and chapter.id
@@ -415,7 +423,11 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 					} else if (sourceId === "weebcentral") {
 						// Process the chapter as before
 						console.log(
-							`Processing chapter ${chapterId} for mangaId ${entry.mangaId} from sourceId ${sourceId}`
+							`(${i + 1}/${
+								entryKeys.length
+							}) Processing chapter ${chapterId} for mangaId ${
+								entry.mangaId
+							} from sourceId ${sourceId}`
 						);
 
 						const baseUrl = "https://weebcentral.com";
@@ -508,7 +520,9 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 					} else if (sourceId === "manganato") {
 						// Process the chapter as before
 						console.log(
-							`Processing Manganato chapter ${chapterId}`
+							`(${i + 1}/${
+								entryKeys.length
+							}) Processing Manganato chapter ${chapterId}`
 						);
 
 						const baseUrl = "https://manganato.com";
@@ -599,7 +613,11 @@ async function processEntries(entriesObj, browser, cache, cacheFilePath) {
 						}
 					} else if (sourceId === "batoto") {
 						// Process the chapter using Puppeteer
-						console.log(`Processing Batoto chapter ${chapterId}`);
+						console.log(
+							`(${i + 1}/${
+								entryKeys.length
+							}) Processing Batoto chapter ${chapterId}`
+						);
 
 						// Combine "https://batocomic.org/chapter/" with chapterId
 						const chapterUrl = `${baseUrl}/chapter/${chapterId}`;
