@@ -1,6 +1,6 @@
 # Paperback Proxy Server Cacher
 
-Script used to parse the paperback archive backup file and send all the chapters of saved manga (manga in your library) to the [Paperback Proxy Server](https://github.com/kymotsujason/paperback-proxy-server) to pre-download so the response times are improved. I was seeing 10x on avg (ie 5000ms to 500ms).
+Script used to parse the paperback archive backup file and send all the chapters of saved manga (manga in your library) to the [Paperback Proxy Server](https://github.com/kymotsujason/paperback-proxy-server) to pre-download so the response times are improved. I was seeing ~~10x on avg (ie 5000ms to 500ms)~~ 5x (ie 2500ms down to 500ms). **New proxy server updates cuts uncached delays in half.
 
 Supports the following sites:
 
